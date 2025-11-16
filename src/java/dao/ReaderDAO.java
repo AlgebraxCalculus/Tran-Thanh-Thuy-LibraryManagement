@@ -18,22 +18,38 @@ import model.ReaderCard;
  */
 public class ReaderDAO extends DAO {
     public ReaderDAO() {
-	super();
+        super();
     }
     
-    public boolean addReader (Reader reader, ReaderCard readerCard) {
+    public boolean addReader(Reader reader, ReaderCard readerCard) {
         boolean result = true;
-        String addMembersql = "INSERT INTO tbl_LibraryMember"
-                + "(username, password, fullName, dateOfBirth, address, phoneNumber) VALUES "
-                + "(?, ?, ?, ?, ?, ?)";
-        String addReadersql = "INSERT INTO tbl_Reader"
-                + "(tbl_LibraryMemberID) VALUES "
-                + "(?)";
-        String addReaderCardsql = "INSERT INTO tbl_ReaderCard"
-                + "(issueDate, tbl_ReaderID) VALUES (CURRENT_DATE, ?)";
+
+        String checkDuplicateSql = 
+                "SELECT COUNT(*) FROM tbl_LibraryMember WHERE username = ? OR phoneNumber = ?";
+
+        String addMembersql = 
+                "INSERT INTO tbl_LibraryMember (username, password, fullName, dateOfBirth, address, phoneNumber, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String addReadersql = 
+                "INSERT INTO tbl_Reader (tbl_LibraryMemberID) VALUES (?)";
+
+        String addReaderCardsql = 
+                "INSERT INTO tbl_ReaderCard (issueDate, tbl_ReaderID) VALUES (CURRENT_DATE, ?)";
+
         try {
             con.setAutoCommit(false);
-            PreparedStatement ps = con.prepareStatement(addMembersql, Statement.RETURN_GENERATED_KEYS);
+
+            PreparedStatement ps = con.prepareStatement(checkDuplicateSql);
+            ps.setString(1, reader.getUsername());
+            ps.setString(2, reader.getPhoneNumber());
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                con.rollback();
+                return false;
+            }
+            ps = con.prepareStatement(addMembersql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, reader.getUsername());
             ps.setString(2, reader.getPassword());
             ps.setString(3, reader.getFullName());
@@ -41,39 +57,46 @@ public class ReaderDAO extends DAO {
             ps.setString(5, reader.getAddress());
             ps.setString(6, reader.getPhoneNumber());
             ps.executeUpdate();
-            
-            ResultSet generatedKeys = ps.getGeneratedKeys(); 
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
-                int readerId = generatedKeys.getInt(1);
+                int memberId = generatedKeys.getInt(1);
+
                 ps = con.prepareStatement(addReadersql, Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, readerId);
+                ps.setInt(1, memberId);
                 ps.executeUpdate();
-                
-                ps = con.prepareStatement(addReaderCardsql, Statement.RETURN_GENERATED_KEYS);
+
+                ResultSet rs2 = ps.getGeneratedKeys();
+                int readerId = 0;
+                if (rs2.next()) {
+                    readerId = rs2.getInt(1);
+                }
+
+                ps = con.prepareStatement(addReaderCardsql);
                 ps.setInt(1, readerId);
                 ps.executeUpdate();
             }
+
             con.commit();
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             result = false;
             try {
-		con.rollback();
-	} catch(Exception ex) {
-		result = false;
-		ex.printStackTrace();
-	}
-                e.printStackTrace();
-	} finally {
-		try {
-                    con.setAutoCommit(true);
-		}catch(Exception ex) {
-                    result = false;
-                    ex.printStackTrace();
-		}
-	}
-	return result;
+                con.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return result;
     }
-    
     public ArrayList<Reader> searchReader (int id) {
         ArrayList<Reader> result = new ArrayList<Reader>();
         String sql = "SELECT lm.ID, lm.fullName, lm.address, lm.phoneNumber "
