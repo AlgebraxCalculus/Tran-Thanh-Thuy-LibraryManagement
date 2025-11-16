@@ -237,7 +237,10 @@
                 </table>
 
                 <div class="action-area">
-                    <button type="button" class="btnBack" onclick="window.history.back();">Back</button>
+                    <button type="button" class="btnBack"
+                            onclick="window.location.href='<%= request.getContextPath() %>/view/libraryStaff/SearchReader.jsp'">
+                        Back
+                    </button>
                     <button type="submit" class="btnNext">Next</button>
                 </div>
             </form>
