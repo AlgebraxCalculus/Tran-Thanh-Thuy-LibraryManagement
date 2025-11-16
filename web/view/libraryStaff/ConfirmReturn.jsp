@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="model.ReturnSlip"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Staff"%>
@@ -15,11 +16,17 @@
 <%@page import="model.FineDetail"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<%
+    <%
         Staff staff = (Staff) session.getAttribute("staff");
         Reader reader = (Reader) session.getAttribute("reader");
         ArrayList<ReturnSlipDetail> listReturnSlipDetail =
             (ArrayList<ReturnSlipDetail>) session.getAttribute("listReturnSlipDetail");
+    %>
+    
+    <%
+    LocalDate today = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    String formattedDate = today.format(formatter);
     %>
 
 <!DOCTYPE html>
@@ -249,7 +256,7 @@
 
         <div class="info-section">
             <p>- Library staff: <strong><%= staff != null ? staff.getFullName() : "N/A" %></strong></p>
-
+            <p>- Return date: <strong><%= formattedDate %></strong></p>
             <table class="data-table tblReader">
                 <caption style="caption-side: top; text-align: left; font-weight: bold; font-size: 18px;">Reader</caption>
                 <thead>
