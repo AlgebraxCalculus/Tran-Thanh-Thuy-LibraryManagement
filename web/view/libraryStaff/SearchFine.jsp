@@ -9,7 +9,6 @@
 <%@page import="model.ReturnSlipDetail"%>
 <%@page import="model.Fine"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
     <%
         ArrayList<Fine> result = (ArrayList<Fine>) request.getAttribute("result");
         ArrayList<ReturnSlipDetail> listReturnSlipDetail =
@@ -41,43 +40,44 @@
                 font-size: 16px; /* Tăng kích thước font cơ bản */
             }
 
-            /* ===== Banner ===== */
+            /* ================= Banner ================ */
             .banner {
                 background: var(--primary-color);
                 color: white;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 25px 50px; /* Tăng padding */
-                font-size: 26px; /* Tăng kích thước font */
+                padding: 28px 55px;
+                font-size: 28px;
                 font-weight: bold;
                 letter-spacing: 0.5px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+                position: sticky;
+                top: 0;
+                z-index: 10;
             }
 
             .banner-left {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 10px;
             }
 
             .library-title {
-                font-size: 30px; /* Tăng kích thước font */
+                font-size: 36px;
                 font-weight: bold;
+                margin-bottom: 6px;
             }
 
             .staff-info {
-                font-size: 18px; /* Tăng kích thước font */
-                font-weight: normal;
+                font-size: 20px;
                 line-height: 1.8;
-                letter-spacing: 0.3px;
             }
 
             .banner-right {
-                font-size: 20px; /* Tăng kích thước font */
-                font-weight: normal;
-                text-align: right;
+                font-size: 24px;
                 opacity: 0.95;
+                text-align: right;
             }
 
             /* ===== Main ===== */
@@ -380,7 +380,8 @@
             </table>
 
             <div class="action-area" style="display:flex; justify-content: space-between;">
-                    <button type="button" class="btnBack" onclick="window.history.back();">
+                    <button type="button" class="btnBack"
+                        onclick="sessionStorage.removeItem('selectedFines'); window.location.href='<%= request.getContextPath() %>/view/libraryStaff/BorrowedDocument.jsp'">
                         Back
                     </button>
                 <button type="submit" class="btnMakePayment">Make Payment</button>
