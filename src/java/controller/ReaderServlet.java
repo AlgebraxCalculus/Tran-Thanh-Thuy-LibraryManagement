@@ -76,17 +76,11 @@ public class ReaderServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(readerCodeRaw);
             ArrayList<Reader> searchResult = readerDAO.searchReader(id);
-
-            HttpSession session = request.getSession();
-            session.setAttribute("result", searchResult);
-            session.removeAttribute("readerError");
+            request.setAttribute("result", searchResult);
+            request.removeAttribute("readerError");
 
         } catch (NumberFormatException e) {
-            HttpSession session = request.getSession();
-            session.setAttribute("readerError", "Reader ID must be a valid number.");
-
-            // Xóa kết quả cũ
-            session.removeAttribute("result");
+            request.setAttribute("readerError", "Reader ID must be a valid number.");
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("view/libraryStaff/SearchReader.jsp");
