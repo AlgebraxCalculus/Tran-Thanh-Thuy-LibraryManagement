@@ -16,8 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Reader;
 import model.ReaderCard;
+import model.Staff;
 
 /**
  *
@@ -63,6 +65,7 @@ public class ReaderServlet extends HttpServlet {
         throws ServletException, IOException {
 
         String readerCodeRaw = request.getParameter("readerCode");
+        Staff staff = (Staff) request.getSession().getAttribute("staff");
         if (readerCodeRaw == null || readerCodeRaw.trim().isEmpty()) {
             request.setAttribute("error", "Please enter a reader ID before searching.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("view/libraryStaff/SearchReader.jsp");
@@ -74,9 +77,16 @@ public class ReaderServlet extends HttpServlet {
             int id = Integer.parseInt(readerCodeRaw);
             ArrayList<Reader> searchResult = readerDAO.searchReader(id);
 
-            request.setAttribute("result", searchResult);
+            HttpSession session = request.getSession();
+            session.setAttribute("result", searchResult);
+            session.removeAttribute("readerError");
+
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Reader ID must be a valid number.");
+            HttpSession session = request.getSession();
+            session.setAttribute("readerError", "Reader ID must be a valid number.");
+
+            // Xóa kết quả cũ
+            session.removeAttribute("result");
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("view/libraryStaff/SearchReader.jsp");
@@ -134,6 +144,4 @@ public class ReaderServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-
 }
