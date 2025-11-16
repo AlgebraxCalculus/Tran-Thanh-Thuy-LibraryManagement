@@ -5,8 +5,8 @@
 
 <%
     ArrayList<Reader> listReader = (ArrayList<Reader>) request.getAttribute("result");
-    Staff staff = (Staff) request.getAttribute("staff");
-    String error = (String) request.getAttribute("error");
+    Staff staff = (Staff) session.getAttribute("staff");
+    String readerError = (String) request.getAttribute("readerError");
 %>
 
 <!DOCTYPE html>
@@ -188,6 +188,31 @@
                 margin-bottom: 12px;
                 color: var(--text-color);
             }
+            
+            /* ================= Back Button ================ */
+            .action-area {
+                display: flex;
+                justify-content: center; 
+                margin-top: 40px;       
+            }
+
+            .btnBack {
+                padding: 15px 50px;      
+                background: #6c757d; 
+                border: none;
+                border-radius: 8px;  
+                color: white;
+                font-size: 20px;      
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+
+            .btnBack:hover {
+                background: #5a6268;    
+                transform: translateY(-2px); 
+            }
+            
         </style>
     </head>
 
@@ -220,12 +245,12 @@
             </form>
 
             <!-- Error Message -->
-            <% if (error != null) { %>
-                <div class="error-message"><%= error %></div>
+            <% if (readerError != null) { %>
+                <div class="error-message"><%= readerError %></div>
             <% } %>
 
             <!-- Table (only show when no error) -->
-            <% if (error == null) { %>
+            <% if (readerError == null) { %>
             <table class="tblReader">
                 <caption>Reader Table</caption>
                 <thead>
@@ -276,7 +301,13 @@
                 <input type="hidden" id="phoneInput" name="phoneNumber">
                 <input type="hidden" name="action" value="selectReaderToReturn">
             </form>
-
+            
+            <div class="action-area">
+                <button type="button" class="btnBack"
+                        onclick="window.location.href='<%= request.getContextPath() %>/view/libraryStaff/StaffHome.jsp'">
+                    Back
+                </button>
+            </div>
         </div>
 
         <script>
