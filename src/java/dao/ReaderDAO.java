@@ -28,8 +28,8 @@ public class ReaderDAO extends DAO {
                 "SELECT COUNT(*) FROM tbl_LibraryMember WHERE username = ? OR phoneNumber = ?";
 
         String addMembersql = 
-                "INSERT INTO tbl_LibraryMember (username, password, fullName, dateOfBirth, address, phoneNumber, email) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "INSERT INTO tbl_LibraryMember (username, password, fullName, dateOfBirth, address, phoneNumber) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         String addReadersql = 
                 "INSERT INTO tbl_Reader (tbl_LibraryMemberID) VALUES (?)";
@@ -121,3 +121,4 @@ public class ReaderDAO extends DAO {
 	return result;
     }
 }
+
