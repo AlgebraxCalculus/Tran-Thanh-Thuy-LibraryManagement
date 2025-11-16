@@ -12,6 +12,7 @@
             /* ========== Theme Colors ========== */
             :root {
                 --primary-color: #007bff;
+                --logout-color: #dc3545;
                 --background-color: #eef2f7;
                 --text-color: #333;
                 --border-color: #ddd;
@@ -22,7 +23,7 @@
                 background-color: var(--background-color);
                 margin: 0;
                 padding: 0;
-                height: 100vh;
+                min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 font-size: 17px;
@@ -38,7 +39,6 @@
                 padding: 30px 60px;
                 font-size: 26px;
                 font-weight: bold;
-                letter-spacing: 0.5px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             }
 
@@ -56,7 +56,6 @@
             .staff-info {
                 font-size: 18px;
                 line-height: 1.7;
-                letter-spacing: 0.3px;
             }
 
             .banner-right {
@@ -78,9 +77,9 @@
             /* ========== Staff Container ========== */
             .staff-container {
                 background: #fff;
-                padding: 70px 65px;
+                padding: 60px 50px;
                 border-radius: 16px;
-                width: 600px; /* Rộng và cân đối hơn */
+                width: 600px;
                 text-align: center;
                 box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
                 transition: transform 0.2s;
@@ -100,28 +99,39 @@
             .staff-container p {
                 color: var(--text-color);
                 font-size: 20px;
-                margin-bottom: 45px;
-                padding-bottom: 20px;
+                margin-bottom: 40px;
                 border-bottom: 1px solid var(--border-color);
+                padding-bottom: 20px;
             }
 
-            /* ========== Button Style ========== */
-            .btnReturning {
+            /* ========== Button Styles ========== */
+            .btn {
                 display: block;
-                padding: 22px;
+                padding: 18px 0;
                 border-radius: 10px;
-                background: var(--primary-color);
                 color: white;
                 font-size: 22px;
                 font-weight: bold;
                 text-decoration: none;
-                transition: background 0.3s;
                 width: 100%;
-                box-sizing: border-box;
+                margin-bottom: 20px;
+                transition: background 0.3s;
+            }
+
+            .btnReturning {
+                background-color: var(--primary-color);
             }
 
             .btnReturning:hover {
-                background: #0056b3;
+                background-color: #0056b3;
+            }
+
+            .btnLogOut {
+                background-color: var(--logout-color);
+            }
+
+            .btnLogOut:hover {
+                background-color: #c82333;
             }
         </style>
     </head>
@@ -143,7 +153,9 @@
             <div class="staff-container">
                 <h1>Welcome Staff ${staff.fullName}!</h1>
                 <p>Please select a function below:</p>
-                <a href="view/libraryStaff/SearchReader.jsp" class="btnReturning">Return Documents</a>
+
+                <a href="<%= request.getContextPath() %>/view/libraryStaff/SearchReader.jsp" class="btn btnReturning">Return Documents</a>
+                <a href="view/libraryStaff/Login.jsp" class="btn btnLogOut">Log out</a>
             </div>
         </div>
     </body>
