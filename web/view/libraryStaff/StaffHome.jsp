@@ -1,7 +1,7 @@
 <%@page import="model.Staff"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    Staff staff = (Staff) request.getAttribute("staff");
+    Staff staff = (Staff) session.getAttribute("staff");
 %>
 <!DOCTYPE html>
 <html>
